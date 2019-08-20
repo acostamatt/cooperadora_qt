@@ -5,6 +5,7 @@ from PyQt5.QtWidgets import QWidget, QHBoxLayout, QVBoxLayout, QLabel, QLineEdit
 
 class Login(QWidget):
     login_confirmado = pyqtSignal(str, str)
+    change_check_view = pyqtSignal(bool)
     def __init__(self):
         QWidget.__init__(self)
         self.setup()
@@ -24,6 +25,10 @@ class Login(QWidget):
         self.__label_pass.setEchoMode(self.__label_pass.Password)
         self.__form_layout.addWidget(self.__label_pass)
 
+        self.__check_view_pass = QCheckBox()
+        self.__check_view_pass.setText("Mostrar contraseña")
+        self.__form_layout.addWidget(self.__check_view_pass)
+
         self.__label_saludo = QLabel()
         self.__label_saludo.hide()
         self.__form_layout.addWidget(self.__label_saludo)
@@ -36,10 +41,14 @@ class Login(QWidget):
         self.setLayout(self.__main_layout)
 
         self.__boton_guardar.clicked.connect(self.on_enviar_click)
+        self.__check_view_pass.clicked.connect(self.on_enviar_change_check_view)
 
     def on_enviar_click(self):
         self.login_confirmado.emit(self.__label_user.text(),
                                    self.__label_pass.text())
+
+    def on_enviar_change_check_view(self):
+        self.change_check_view.emit(self.__check_view_pass.isChecked())
 
     def mostrar_errores(self, errores: list):
         lista_errores = "<br>".join([f"- {msg}" for msg in errores])
@@ -51,3 +60,9 @@ class Login(QWidget):
     def mostrar_mensaje_exito(self, mensaje: str):
         self.__label_saludo.setText(mensaje)
         self.__label_saludo.show()
+
+    def mostrar_pass(self):
+        self.__label_pass.setEchoMode(self.__label_pass.Normal)
+
+    def ocultar_pass(self):
+        self.__label_pass.setEchoMode(self.__label_pass.Password)
