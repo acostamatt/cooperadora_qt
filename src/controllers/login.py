@@ -1,36 +1,43 @@
-from models.dao import LOGIN_DAO
-from views.login import Login
-from models.login import LoginModel
+from PyQt5.QtCore import QObject
+from models.usuario import UserThread
+from views.login.login import Login
+from views.main_window.main_window import MainWindow
 
-class LoginController:
-    def __init__(self, view: Login):
-        self.__view = view
-        self.__view.login_confirmado.connect(self.__on_login_confirmado)
-        self.__view.change_check_view.connect(self.__on_change_check_view)
+class LoginController(QObject):
+    def __init__(self, view: Login, main: MainWindow):
+        QObject.__init__(self)
+        self.__view_login = view
+        self.__view_main = main
+        self.__server_user = UserThread()
+        self.__view_login.login_confirmado.connect(self.__on_login_confirmado)
+        self.__view_login.change_check_view.connect(self.__on_change_check_view)
+        self.errores = []
 
     def __on_change_check_view(self, check_view_pass):
 
         if check_view_pass == True:
-            self.__view.mostrar_pass()
+            self.__view_login.mostrar_pass()
         else:
-            self.__view.ocultar_pass()
+            self.__view_login.ocultar_pass()
 
     def __on_login_confirmado(self, user, passw):
-
-        login = LoginModel()
-        login.user = user
-        login.passw = passw
-        errores = login.validar()
-
-        if errores:
-            self.__view.mostrar_errores(errores)
+        if user == '' or passw == '':
+            self.errores.append("Debe ingresar usuario y contraseña.")
+            self.__view_login.mostrar_errores(self.errores)
+            self.errores[:] = []
         else:
-            if LOGIN_DAO.comprobar_usuario(login):
-                self.__view.close()
-            else:
-                errores.append("No existe usuario y contraseña.")
-                self.__view.mostrar_errores(errores)
+            self.__server_user.check_user_data(user, passw)
+            self.__server_user.checkUser.connect(self.__on_checked_user)
+            self.__server_user.start()
+
+    def __on_checked_user(self, msj_error):
+        if msj_error != '':
+            self.errores.append(msj_error)
+            self.__view_login.mostrar_errores(self.errores)
+            self.errores[:] = []
+        else:
+            self.__view_main.show()
+            self.__view_login.close()
 
     def show_view(self):
-        self.__view.show()
-
+        self.__view_login.show()

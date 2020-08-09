@@ -1,0 +1,20 @@
+from PyQt5.QtCore import QObject
+
+from controllers.form_socio import FormSocioController
+from views.socio.form_socio import FormSocio
+from views.main_window.main_window import MainWindow
+
+
+class MainWindowController(QObject):
+    def __init__(self, main: MainWindow):
+        QObject.__init__(self)
+        self.__main = main
+        self.__main.clickedNewSocio.connect(self.__onclickedNewSocio)
+
+    def show_view(self):
+        self.__main.show()
+
+    def __onclickedNewSocio(self):
+        self.__socio = FormSocio()
+        self.__socio_controller = FormSocioController(self.__socio)
+        self.__socio_controller.show_view()
