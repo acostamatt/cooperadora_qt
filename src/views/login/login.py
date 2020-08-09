@@ -36,7 +36,7 @@ class Login(QtWidgets.QWidget):
         mensaje_error = f"<div><h4>Hay errores:</h4></div>" \
                         f"<div style='color:#FF0000'><strong>{lista_errores}</strong></div>"
         self.__label_msj.setText(mensaje_error)
-        self.__label_msj.setMaximumSize(16777215,16777215)
+        self.__label_msj.setMaximumSize(500, 500)
         self.__label_msj.show()
 
     def mostrar_pass(self):

@@ -8,7 +8,6 @@ class Usuario(mongoengine.Document):
     meta = {'collection':'usuarios'}
 
 class UserThread(QtCore.QThread):
-    DB().conectar()
     checkUser = QtCore.pyqtSignal(str)
 
     def __init__(self):

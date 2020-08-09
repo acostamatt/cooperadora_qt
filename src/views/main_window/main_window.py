@@ -60,8 +60,8 @@ class TableAlumno(QtWidgets.QWidget):
         self.ui.tableView.clicked.connect(self.__on_table_clicked)
 
     def __on_table_clicked(self, index: QModelIndex):
-        self.ui.pushButton.setEnabled(True)
-        self.ui.pushButton_2.setEnabled(True)
+        self.ui.deleteButton.setEnabled(True)
+        self.ui.updateButton.setEnabled(True)
         self.id_alumno = str(index.data(Qt.UserRole))
 
     def clickedUpdateAlumno(self):
