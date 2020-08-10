@@ -98,6 +98,6 @@ class Ui_MainWindow(object):
         self.pushButton.setText(_translate("MainWindow", "Consultar Alumno"))
         self.toolBox_2.setItemText(self.toolBox_2.indexOf(self.page_4), _translate("MainWindow", "Socios"))
         self.pushButton_7.setText(_translate("MainWindow", "Registrar"))
-        self.pushButton_8.setText(_translate("MainWindow", "PushButton"))
+        self.pushButton_8.setText(_translate("MainWindow", "Consultar"))
         self.toolBox_2.setItemText(self.toolBox_2.indexOf(self.page_5), _translate("MainWindow", "Cuotas"))
         self.toolBox_2.setItemText(self.toolBox_2.indexOf(self.page_6), _translate("MainWindow", "Reportes"))
