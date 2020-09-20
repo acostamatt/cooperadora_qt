@@ -1,13 +1,13 @@
-from PyQt5.QtCore import QObject
+from PyQt5 import QtCore
 from models.usuario import UserThread
 from views.login.login import Login
 from views.main_window.main_window import MainWindow
 
-class LoginController(QObject):
-    def __init__(self, view: Login, main: MainWindow):
-        QObject.__init__(self)
+class LoginController(QtCore.QObject):
+    loginUser = QtCore.pyqtSignal()
+    def __init__(self, view: Login):
+        QtCore.QObject.__init__(self)
         self.__view_login = view
-        self.__view_main = main
         self.__server_user = UserThread()
         self.__view_login.login_confirmado.connect(self.__on_login_confirmado)
         self.__view_login.change_check_view.connect(self.__on_change_check_view)
@@ -36,7 +36,7 @@ class LoginController(QObject):
             self.__view_login.mostrar_errores(self.errores)
             self.errores[:] = []
         else:
-            self.__view_main.show()
+            self.loginUser.emit()
             self.__view_login.close()
 
     def show_view(self):

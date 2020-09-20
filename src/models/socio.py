@@ -12,34 +12,28 @@ class Alumno(mongoengine.Document):
     ciclo = mongoengine.IntField(required=True, max_length=4)
     meta = {'collection':'alumnos'}
 
-    @staticmethod
-    def obtener_alumnos():
-        alumnos = Alumno.objects
+    @classmethod
+    def obtener_alumnos(cls):
+        alumnos = cls.objects
         array_alumno = list()
         for alumno in alumnos:
             array_alumno.append(alumno)
 
         return array_alumno
 
-    @staticmethod
-    def obtener_socio_alumno(id_alumno):
-        for socio in Socio.objects:
-            for list_socio in socio.alumnos:
-                if str(id_alumno) == str(list_socio.id):
-                    return socio.apellido+', '+socio.nombre
+    @classmethod
+    def obtener_socio_por_alumno(cls, id_alumno):
+        socio = Socio.objects(alumnos=id_alumno).get()
+        return socio.apellido+', '+socio.nombre
 
-    @staticmethod
-    def obtener_alumno_id(id_alumno):
-        alumnos = Alumno.objects(id=id_alumno).get()
-        dict_alumno = dict()
-        for alumno in alumnos:
-            dict_alumno[alumno] = alumnos[alumno]
-        return dict_alumno
+    @classmethod
+    def obtener_alumno_id(cls, id_alumno):
+        return cls.objects(id=id_alumno).first()
 
-    @staticmethod
-    def update_alumno_id(data_alumno):
+    @classmethod
+    def update_alumno_id(cls, data_alumno):
         try:
-            obj_alumno = Alumno.objects(id=data_alumno['id']).get()
+            obj_alumno = cls.objects(id=data_alumno['id']).get()
             obj_alumno.update(dni=data_alumno['dni'], apellido=data_alumno['apellido'],
                              nombre=data_alumno['nombre'], grado=data_alumno['grado'],
                              turno=data_alumno['turno'], division=data_alumno['division'])
@@ -47,9 +41,9 @@ class Alumno(mongoengine.Document):
         except:
             return "Error al actualizar."
 
-    @staticmethod
-    def delete_alumno(id_alumno):
-        obj_alumno = Alumno.objects(id=id_alumno).get()
+    @classmethod
+    def delete_alumno(cls, id_alumno):
+        obj_alumno = cls.objects(id=id_alumno).get()
         obj_alumno.delete()
         msj = "Datos del alumno eliminados correctamente."
         obj_socio = Socio.objects
@@ -70,26 +64,26 @@ class Socio(mongoengine.Document):
     alumnos = mongoengine.ListField(mongoengine.ReferenceField('Alumno', reverse_delete_rule=mongoengine.PULL))
     meta = {'collection':'socios'}
 
-    @staticmethod
-    def obtener_socios():
-        socios = Socio.objects
+    @classmethod
+    def obtener_socios(cls):
+        socios = cls.objects
         array_socio = list()
         for socio in socios:
             array_socio.append(socio)
         return array_socio
 
-    @staticmethod
-    def obtener_socio_id(id_socio):
-        socios = Socio.objects(id=id_socio).get()
+    @classmethod
+    def obtener_socio_id(cls, id_socio):
+        socios = cls.objects(id=id_socio).get()
         dict_socio = dict()
         for socio in socios:
             dict_socio[socio] = socios[socio]
         return dict_socio
 
-    @staticmethod
-    def update_socio_id(data_socio):
+    @classmethod
+    def update_socio_id(cls, data_socio):
         try:
-            obj_socio = Socio.objects(id=data_socio['id']).get()
+            obj_socio = cls.objects(id=data_socio['id']).get()
             obj_socio.update(dni=data_socio['dni'], apellido=data_socio['apellido'],
                              nombre=data_socio['nombre'], domicilio=data_socio['domicilio'],
                              telefono=data_socio['telefono'])
@@ -97,9 +91,9 @@ class Socio(mongoengine.Document):
         except:
             return "Error al actualizar."
 
-    @staticmethod
-    def delete_socio(id_socio):
-        obj_socio = Socio.objects(id=id_socio).get()
+    @classmethod
+    def delete_socio(cls, id_socio):
+        obj_socio = cls.objects(id=id_socio).get()
         for list_alumnos in obj_socio.alumnos:
             Alumno.objects(id=str(list_alumnos.id)).delete()
         obj_socio.delete()

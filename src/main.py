@@ -13,14 +13,16 @@ from views.main_window.main_window import MainWindow
 class App(QApplication):
     def __init__(self):
         QApplication.__init__(self, sys.argv)
-        self.show_form_login()
         DB().conectar()
-        #self.show_main_window()
-        #self.show_form_socio_window()
+
+    def start(self):
+        self.show_form_login()
+        sys.exit(app.exec_())
 
     def show_form_login(self):
-        self.form_login = LoginController(Login(),MainWindow())
+        self.form_login = LoginController(Login())
         self.form_login.show_view()
+        self.form_login.loginUser.connect(self.show_main_window)
 
     def show_main_window(self):
         self.main_window = MainWindowController(MainWindow())
@@ -30,5 +32,6 @@ class App(QApplication):
         self.form_socio = FormSocioController(FormSocio())
         self.form_socio.show_view()
 
-app = App()
-sys.exit(app.exec_())
+if __name__ == "__main__":
+    app = App()
+    app.start()

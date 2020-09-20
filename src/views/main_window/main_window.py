@@ -32,13 +32,13 @@ class MainWindow(QtWidgets.QWidget):
         self.tabla_socio = TableSocio(self)
         self.cleanLayout(self.ui.layoutFormSocio)
         self.ui.layoutFormSocio.addWidget(self.tabla_socio)
-        self.setFixedWidth(900)
+        self.setFixedWidth(1000)
 
     def onClickedConsultaAlumno(self):
         self.__tabla_alumno = TableAlumno(self)
         self.cleanLayout(self.ui.layoutFormSocio)
         self.ui.layoutFormSocio.addWidget(self.__tabla_alumno)
-        self.setFixedWidth(900)
+        self.setFixedWidth(1000)
 
     def cleanLayout(self, layout):
         for i in range(layout.count()):
