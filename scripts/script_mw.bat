@@ -1,5 +1,4 @@
 @echo off
-pip install PyQt5 mongoengine
 echo Generaremos los archivos .qrc y .ui a .py
 pause
 pyrcc5 -o ..\src\resources.py ..\qrc\resources.qrc 

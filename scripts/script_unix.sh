@@ -1,5 +1,4 @@
 #!/bin/bash
-pip install PyQt5 mongoengine
 pyrcc5 -o ../src/resources.py ../qrc/resources.qrc 
 pyuic5 ../ui/form_alumno_update.ui -o ../src/views/alumno/form_alumno_update.py
 pyuic5 ../ui/form_socio_update.ui -o ../src/views/socio/form_socio_update.py 
