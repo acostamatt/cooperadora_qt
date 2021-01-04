@@ -1,12 +1,13 @@
-from PyQt5 import QtCore
+from PyQt5.QtCore import QObject, pyqtSignal
+
 from models.usuario import UserThread
 from views.login.login import Login
 from views.main_window.main_window import MainWindow
 
-class LoginController(QtCore.QObject):
-    loginUser = QtCore.pyqtSignal()
+class LoginController(QObject):
+    loginUser = pyqtSignal()
     def __init__(self, view: Login):
-        QtCore.QObject.__init__(self)
+        QObject.__init__(self)
         self.__view_login = view
         self.__server_user = UserThread()
         self.__view_login.login_confirmado.connect(self.__on_login_confirmado)

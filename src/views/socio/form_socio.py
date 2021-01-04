@@ -1,14 +1,15 @@
 import time
 
 from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtCore import pyqtSignal
 
 from models.list_alumno_model import ListGradoModel, ListTurnoModel, ListDivisionModel
 from views.socio.form_socio_base import Ui_FormSocio
 from views.main_window.form_window_default import Ui_FormDefault
 
 class FormSocio(QtWidgets.QWidget):
-    saveSocioData = QtCore.pyqtSignal((dict,))
-    dniSocio = QtCore.pyqtSignal((str,))
+    saveSocioData = pyqtSignal((dict,))
+    dniSocio = pyqtSignal((str,))
     def __init__(self):
         QtWidgets.QWidget.__init__(self)
         self.ui = Ui_FormSocio()

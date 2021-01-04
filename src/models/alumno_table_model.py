@@ -1,17 +1,22 @@
 from PyQt5 import QtCore
+from PyQt5.QtCore import QSize, Qt, QModelIndex, QAbstractTableModel
 
 from models.socio import Alumno
 
 
-class AlumnosTableModel(QtCore.QAbstractTableModel):
+class AlumnosTableModel(QAbstractTableModel):
     def __init__(self):
-        QtCore.QAbstractTableModel.__init__(self)
+        QAbstractTableModel.__init__(self)
         self.headers = ["Alumno", "Grado", "Division", "Turno", "Socio"]
         self.headers_widths = [200, 200, 200, 200, 200]
-        self.alumnos = Alumno.obtener_alumnos()
+        self.alumnos = []
 
     def refresh_data(self):
-        # self.alumnos = Alumno.obtener_alumnos()
+        self.alumnos = Alumno.get_all_alumnos()
+        self.modelReset.emit()
+
+    def refresh_data_search(self, search_txt: str):
+        self.alumnos = Alumno.get_search_alumnos(search_txt)
         self.modelReset.emit()
 
     def rowCount(self, parent=None):
@@ -20,10 +25,10 @@ class AlumnosTableModel(QtCore.QAbstractTableModel):
     def columnCount(self, parent=None):
         return len(self.headers)
 
-    def data(self, index: QtCore.QModelIndex, role=None):
+    def data(self, index: QModelIndex, role=None):
         alumno = self.alumnos[index.row()]
-        socio = Alumno.obtener_socio_por_alumno(alumno.id)
-        if role == QtCore.Qt.DisplayRole:
+        socio = Alumno.get_socio_by_alumno(alumno.id)
+        if role == Qt.DisplayRole:
             if index.column() == 0:
                 return alumno.apellido+', '+alumno.nombre
 
@@ -39,13 +44,13 @@ class AlumnosTableModel(QtCore.QAbstractTableModel):
             if index.column() == 4:
                 return socio
 
-        if role == QtCore.Qt.UserRole:
+        if role == Qt.UserRole:
             return alumno.id
 
     def headerData(self, section, orientation, role=None):
-        if orientation == QtCore.Qt.Horizontal:
-            if role == QtCore.Qt.DisplayRole:
+        if orientation == Qt.Horizontal:
+            if role == Qt.DisplayRole:
                 return self.headers[section]
 
-            if role == QtCore.Qt.SizeHintRole:
-                return QtCore.QSize(self.headers_widths[section], 23)
+            if role == Qt.SizeHintRole:
+                return QSize(self.headers_widths[section], 23)

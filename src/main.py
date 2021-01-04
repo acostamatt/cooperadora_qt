@@ -16,7 +16,8 @@ class App(QApplication):
         DB().conectar()
 
     def start(self):
-        self.show_form_login()
+        # self.show_form_login()
+        self.show_main_window()
         sys.exit(app.exec_())
 
     def show_form_login(self):

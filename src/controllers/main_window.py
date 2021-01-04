@@ -4,7 +4,6 @@ from controllers.form_socio import FormSocioController
 from views.socio.form_socio import FormSocio
 from views.main_window.main_window import MainWindow
 
-
 class MainWindowController(QObject):
     def __init__(self, main: MainWindow):
         QObject.__init__(self)

@@ -1,10 +1,11 @@
-from PyQt5 import QtCore
 from PyQt5 import QtWidgets
+from PyQt5.QtCore import pyqtSignal
+
 from views.login.login_base import Ui_Form
 
 class Login(QtWidgets.QWidget):
-    login_confirmado = QtCore.pyqtSignal(str, str)
-    change_check_view = QtCore.pyqtSignal(bool)
+    login_confirmado = pyqtSignal(str, str)
+    change_check_view = pyqtSignal(bool)
     def __init__(self):
         QtWidgets.QWidget.__init__(self)
         self.ui = Ui_Form()

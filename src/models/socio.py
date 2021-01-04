@@ -1,5 +1,7 @@
 import mongoengine
-from PyQt5 import QtCore
+from pymongo.errors import AutoReconnect, OperationFailure
+from PyQt5.QtCore import pyqtSignal, QObject, QThread
+from mongoengine.queryset.visitor import Q
 
 class Alumno(mongoengine.Document):
     nombre = mongoengine.StringField(required=True, max_length=50)
@@ -10,10 +12,15 @@ class Alumno(mongoengine.Document):
     division = mongoengine.StringField(required=True, max_length=1)
     activo = mongoengine.BooleanField(required=True)
     ciclo = mongoengine.IntField(required=True, max_length=4)
-    meta = {'collection':'alumnos'}
+
+    meta = {'collection':'alumnos',
+            'indexes': [{
+                'fields': ['$nombre', "$apellido", "$grado", "$turno", "$division"]
+            }]
+           }
 
     @classmethod
-    def obtener_alumnos(cls):
+    def get_all_alumnos(cls):
         alumnos = cls.objects
         array_alumno = list()
         for alumno in alumnos:
@@ -22,12 +29,12 @@ class Alumno(mongoengine.Document):
         return array_alumno
 
     @classmethod
-    def obtener_socio_por_alumno(cls, id_alumno):
+    def get_socio_by_alumno(cls, id_alumno):
         socio = Socio.objects(alumnos=id_alumno).get()
         return socio.apellido+', '+socio.nombre
 
     @classmethod
-    def obtener_alumno_id(cls, id_alumno):
+    def get_alumno_id(cls, id_alumno):
         return cls.objects(id=id_alumno).first()
 
     @classmethod
@@ -54,6 +61,48 @@ class Alumno(mongoengine.Document):
 
         return msj
 
+    @classmethod
+    def get_search_alumnos(cls, str_search):
+        alumnos = []
+        socios = []
+        if(len(str_search) > 1):
+            filters = (Q(nombre__icontains=str_search) | Q(apellido__icontains=str_search))
+            alumnos = cls.objects.filter(filters)
+
+        if(len(str_search) > 1 and len(alumnos) == 0):
+            filters = Q(turno__icontains=str_search)
+            alumnos = cls.objects.filter(filters)
+
+        if(len(alumnos) == 0 and len(str_search) == 1):
+            filters = Q(division__icontains=str_search)
+            alumnos = cls.objects.filter(filters)
+
+        if(len(alumnos) == 0):
+            try:
+                str_search = int(str_search)
+                if(len(str(str_search)) == 1):
+                    alumnos = cls.objects.filter(__raw__={'$where': 'this.grado.toString().match({})'.format(str_search)})
+            except ValueError:
+                alumnos = []
+
+        if (len(str(str_search)) != 1):
+            array_alumno = list()
+            socios = Socio.get_search_socios(str_search)
+            for socio in socios:
+                for alumno_socio in socio.alumnos:
+                    array_alumno.append(alumno_socio)
+
+            if(array_alumno):
+                return array_alumno
+
+        if (len(alumnos) != 0):
+            array_alumno = list()
+            for alumno in alumnos:
+                array_alumno.append(alumno)
+            return array_alumno
+        else:
+            return cls.get_all_alumnos()
+
 
 class Socio(mongoengine.Document):
     nombre = mongoengine.StringField(required=True, max_length=50)
@@ -61,11 +110,16 @@ class Socio(mongoengine.Document):
     dni = mongoengine.IntField(required=True, max_length=8)
     domicilio = mongoengine.StringField(required=True, max_length=100)
     telefono = mongoengine.IntField(required=True, max_length=15)
-    alumnos = mongoengine.ListField(mongoengine.ReferenceField('Alumno', reverse_delete_rule=mongoengine.PULL))
-    meta = {'collection':'socios'}
+    alumnos = mongoengine.ListField(mongoengine.ReferenceField('Alumno', reversedataSearchSocio_delete_rule=mongoengine.PULL))
+
+    meta = {'collection':'socios',
+            'indexes': [{
+                'fields': ['$nombre', "$apellido", "$dni", "$domicilio", "$telefono"]
+            }]
+           }
 
     @classmethod
-    def obtener_socios(cls):
+    def get_all_socios(cls):
         socios = cls.objects
         array_socio = list()
         for socio in socios:
@@ -73,7 +127,7 @@ class Socio(mongoengine.Document):
         return array_socio
 
     @classmethod
-    def obtener_socio_id(cls, id_socio):
+    def get_socio_id(cls, id_socio):
         socios = cls.objects(id=id_socio).get()
         dict_socio = dict()
         for socio in socios:
@@ -89,7 +143,7 @@ class Socio(mongoengine.Document):
                              telefono=data_socio['telefono'])
             return "Socio actualizado correctamente."
         except:
-            return "Error al actualizar."
+            return "Error al actualizar Socio."
 
     @classmethod
     def delete_socio(cls, id_socio):
@@ -99,11 +153,41 @@ class Socio(mongoengine.Document):
         obj_socio.delete()
         return "Datos del socio eliminados correctamente."
 
+    @classmethod
+    def get_search_socios(cls, str_search):
+        filters = (Q(nombre__icontains=str_search) | Q(apellido__icontains=str_search))
+        socios = cls.objects.filter(filters)
 
-class SocioThreadSave(QtCore.QThread):
-    statusSaveSocio = QtCore.pyqtSignal((str,))
+        if(len(socios) == 0):
+            filters = Q(domicilio__icontains=str_search)
+            socios = cls.objects.filter(filters)
+
+        if(len(socios) == 0):
+            try:
+                str_search = int(str_search)
+                socios = cls.objects.filter(__raw__={'$where': 'this.dni.toString().match({})'.format(str_search)})
+            except ValueError:
+                socios = []
+
+        if (len(socios) == 0):
+            try:
+                str_search = int(str_search)
+                socios = cls.objects.filter(__raw__={'$where': 'this.telefono.toString().match({})'.format(str_search)})
+            except ValueError:
+                socios = []
+
+        if (len(socios) != 0):
+            array_socio = list()
+            for socio in socios:
+                array_socio.append(socio)
+            return array_socio
+        else:
+            return cls.get_all_socios()
+
+class SocioThreadSave(QThread):
+    statusSaveSocio = pyqtSignal((str,))
     def __init__(self):
-        QtCore.QThread.__init__(self)
+        QThread.__init__(self)
         self.data_socio = None
 
     def check_socio_data(self, data_socio: dict):
@@ -164,11 +248,11 @@ class SocioThreadSave(QtCore.QThread):
             self.statusSaveSocio.emit("Datos Incorrectos o incompletos.")
 
 
-class SocioThreadUpdate(QtCore.QThread):
-    dataCheckSocio = QtCore.pyqtSignal((dict,))
-    statusCheckSocio = QtCore.pyqtSignal((str,))
+class SocioThreadUpdate(QThread):
+    dataCheckSocio = pyqtSignal((dict,))
+    statusCheckSocio = pyqtSignal((str,))
     def __init__(self):
-        QtCore.QThread.__init__(self)
+        QThread.__init__(self)
         self.dni_socio = None
 
     def check_dni_socio(self, dni_socio: str):

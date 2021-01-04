@@ -1,13 +1,14 @@
-from PyQt5 import QtCore
+from PyQt5.QtCore import QAbstractTableModel, QModelIndex, Qt, QSize
 
 from models.socio import Socio
 
-class SociosTableModel(QtCore.QAbstractTableModel):
+
+class SociosTableModel(QAbstractTableModel):
     def __init__(self):
-        QtCore.QAbstractTableModel.__init__(self)
+        QAbstractTableModel.__init__(self)
         self.headers = ["Socio", "DNI", "Cant. Alumnos", "Domicilio"]
         self.headers_widths = [1, 1, 1, 1]
-        self.socios = Socio.obtener_socios()
+        self.socios = []
 
     def rowCount(self, parent=None):
         return len(self.socios)
@@ -16,13 +17,17 @@ class SociosTableModel(QtCore.QAbstractTableModel):
         return len(self.headers)
 
     def refresh_data(self):
-        self.alumnos = Socio.obtener_socios()
+        self.socios = Socio.get_all_socios()
         self.modelReset.emit()
 
-    def data(self, index: QtCore.QModelIndex, role=None):
+    def refresh_data_search(self, search_txt: str):
+        self.socios = Socio.get_search_socios(search_txt)
+        self.modelReset.emit()
+
+    def data(self, index: QModelIndex, role=None):
         socio = self.socios[index.row()]
 
-        if role == QtCore.Qt.DisplayRole:
+        if role == Qt.DisplayRole:
             if index.column() == 0:
                 return socio.apellido+', '+socio.nombre
 
@@ -35,13 +40,13 @@ class SociosTableModel(QtCore.QAbstractTableModel):
             if index.column() == 3:
                 return socio.domicilio
 
-        if role == QtCore.Qt.UserRole:
+        if role == Qt.UserRole:
             return socio.id
 
     def headerData(self, section, orientation, role=None):
-        if orientation == QtCore.Qt.Horizontal:
-            if role == QtCore.Qt.DisplayRole:
+        if orientation == Qt.Horizontal:
+            if role == Qt.DisplayRole:
                 return self.headers[section]
 
-            if role == QtCore.Qt.SizeHintRole:
-                return QtCore.QSize(self.headers_widths[section], 23)  # 23, numero mágico (?
+            if role == Qt.SizeHintRole:
+                return QSize(self.headers_widths[section], 23)  # 23, numero mágico (?

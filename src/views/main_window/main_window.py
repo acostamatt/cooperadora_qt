@@ -1,6 +1,5 @@
 from PyQt5 import QtWidgets, QtCore, QtTest
-from PyQt5.QtCore import QModelIndex, Qt
-
+from PyQt5.QtCore import QModelIndex, Qt, pyqtSignal, QAbstractTableModel
 from models.alumno_table_model import AlumnosTableModel
 from models.list_alumno_model import ListGradoModel, ListTurnoModel, ListDivisionModel
 from models.socio import Socio, Alumno
@@ -13,7 +12,7 @@ from views.alumno.table_view_alumno import Ui_TableAlumno
 from views.socio.table_view_socio import Ui_TableSocio
 
 class MainWindow(QtWidgets.QWidget):
-    clickedNewSocio = QtCore.pyqtSignal()
+    clickedNewSocio = pyqtSignal()
     def __init__(self):
         QtWidgets.QWidget.__init__(self)
         self.ui = Ui_MainWindow()
@@ -29,15 +28,35 @@ class MainWindow(QtWidgets.QWidget):
         self.clickedNewSocio.emit()
 
     def onClickedConsultaSocio(self):
-        self.tabla_socio = TableSocio(self)
+        self.__table_socio = TableSocio(self)
+        self.__table_model_socio = SociosTableModel()
         self.cleanLayout(self.ui.layoutFormSocio)
-        self.ui.layoutFormSocio.addWidget(self.tabla_socio)
+        self.__table_socio.set_socios_table_model(self.__table_model_socio)
+        self.ui.layoutFormSocio.addWidget(self.__table_socio)
+        self.setFixedWidth(1000)
+
+    def onSearchConsultaSocio(self, search_str: str):
+        self.__table_socio = TableSocio(self)
+        self.__table_model_socio = SociosTableModel()
+        self.cleanLayout(self.ui.layoutFormSocio)
+        self.__table_socio.set_socios_table_model_search(self.__table_model_socio, search_str)
+        self.ui.layoutFormSocio.addWidget(self.__table_socio)
         self.setFixedWidth(1000)
 
     def onClickedConsultaAlumno(self):
-        self.__tabla_alumno = TableAlumno(self)
+        self.__table_alumno = TableAlumno(self)
+        self.__table_model_alumno = AlumnosTableModel()
         self.cleanLayout(self.ui.layoutFormSocio)
-        self.ui.layoutFormSocio.addWidget(self.__tabla_alumno)
+        self.__table_alumno.set_alumnos_table_model(self.__table_model_alumno)
+        self.ui.layoutFormSocio.addWidget(self.__table_alumno)
+        self.setFixedWidth(1000)
+
+    def onSearchConsultaAlumno(self, search_str: str):
+        self.__table_alumno = TableAlumno(self)
+        self.__table_model_alumno = AlumnosTableModel()
+        self.cleanLayout(self.ui.layoutFormSocio)
+        self.__table_alumno.set_alumnos_table_model_search(self.__table_model_alumno, search_str)
+        self.ui.layoutFormSocio.addWidget(self.__table_alumno)
         self.setFixedWidth(1000)
 
     def cleanLayout(self, layout):
@@ -56,8 +75,24 @@ class TableAlumno(QtWidgets.QWidget):
         self.ui.tableView.setStyleSheet("* { gridline-color: transparent }")
         self.ui.tableView.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignVCenter)
         self.alumno_table_model = AlumnosTableModel()
-        self.ui.tableView.setModel(self.alumno_table_model)
+
         self.ui.tableView.clicked.connect(self.__on_table_clicked)
+        self.ui.lineEdit.returnPressed.connect(self.__on_enter_pressed_alumno)
+
+    def set_alumnos_table_model(self, model):
+        self.ui.tableView.setModel(model)
+        self.ui.tableView.setColumnWidth(0, 250)
+        model.refresh_data()
+
+    def set_alumnos_table_model_search(self, model: QAbstractTableModel, search_str: str):
+        self.ui.tableView.setModel(model)
+        self.ui.tableView.setColumnWidth(0, 250)
+        model.refresh_data_search(search_str)
+        self.ui.lineEdit.setText(search_str)
+        self.ui.lineEdit.installEventFilter(self)
+
+    def __on_enter_pressed_alumno(self):
+        self.main_window.onSearchConsultaAlumno(self.ui.lineEdit.text())
 
     def __on_table_clicked(self, index: QModelIndex):
         self.ui.deleteButton.setEnabled(True)
@@ -65,7 +100,7 @@ class TableAlumno(QtWidgets.QWidget):
         self.id_alumno = str(index.data(Qt.UserRole))
 
     def clickedUpdateAlumno(self):
-        self.dict_alumno = Alumno.obtener_alumno_id(self.id_alumno)
+        self.dict_alumno = Alumno.get_alumno_id(self.id_alumno)
         self.alumno_update = AlumnoUpdateWindow(self.dict_alumno, self.main_window, self.ui.labelMsj)
         self.alumno_update.show()
 
@@ -91,9 +126,24 @@ class TableSocio(QtWidgets.QWidget):
         self.ui.tableView.setStyleSheet("* { gridline-color: transparent }")
         self.ui.tableView.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignVCenter)
         self.socio_table_model = SociosTableModel()
-        self.ui.tableView.setModel(self.socio_table_model)
 
         self.ui.tableView.clicked.connect(self.__on_table_clicked)
+        self.ui.lineEdit.returnPressed.connect(self.__on_enter_pressed_socio)
+
+    def set_socios_table_model(self, model: QAbstractTableModel):
+        self.ui.tableView.setModel(model)
+        self.ui.tableView.setColumnWidth(0, 250)
+        model.refresh_data()
+
+    def set_socios_table_model_search(self, model: QAbstractTableModel, search_str: str):
+        self.ui.tableView.setModel(model)
+        self.ui.tableView.setColumnWidth(0, 250)
+        model.refresh_data_search(search_str)
+        self.ui.lineEdit.setText(search_str)
+        self.ui.lineEdit.installEventFilter(self)
+
+    def __on_enter_pressed_socio(self):
+        self.main_window.onSearchConsultaSocio(self.ui.lineEdit.text())
 
     def __on_table_clicked(self, index: QModelIndex):
         self.ui.pushButton.setEnabled(True)
@@ -101,7 +151,7 @@ class TableSocio(QtWidgets.QWidget):
         self.id_socio = str(index.data(Qt.UserRole))
 
     def clickedUpdateSocio(self):
-        self.dict_socio = Socio.obtener_socio_id(self.id_socio)
+        self.dict_socio = Socio.get_socio_id(self.id_socio)
         self.socio_update = SocioUpdateWindow(self.dict_socio, self.main_window, self.ui.labelMsj)
         self.socio_update.show()
 
