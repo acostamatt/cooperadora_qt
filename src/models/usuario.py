@@ -1,7 +1,6 @@
 import mongoengine
 from PyQt5.QtCore import QThread, pyqtSignal
 
-from models.dbcon import DB
 
 class Usuario(mongoengine.Document):
     usuario = mongoengine.StringField(required=True, max_length=50)

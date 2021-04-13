@@ -33,6 +33,19 @@
       </spacer>
      </item>
      <item>
+      <widget class="QCheckBox" name="checkBox">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string>Activo</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QLineEdit" name="lineEdit">
        <property name="maximumSize">
         <size>
@@ -114,6 +127,9 @@
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="spacing">
+      <number>10</number>
+     </property>
      <property name="topMargin">
       <number>0</number>
      </property>
@@ -141,12 +157,12 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="deleteButton">
+      <widget class="QPushButton" name="inactiveButton">
        <property name="enabled">
         <bool>false</bool>
        </property>
        <property name="text">
-        <string>Eliminar</string>
+        <string>Inactivar</string>
        </property>
       </widget>
      </item>
@@ -186,7 +202,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>deleteButton</sender>
+   <sender>inactiveButton</sender>
    <signal>clicked()</signal>
    <receiver>TableAlumno</receiver>
    <slot>clickedDeleteAlumno()</slot>

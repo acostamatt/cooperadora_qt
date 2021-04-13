@@ -77,7 +77,7 @@
    <item>
     <widget class="QPushButton" name="boton_check">
      <property name="text">
-      <string>Guardar</string>
+      <string>Ingresar</string>
      </property>
     </widget>
    </item>

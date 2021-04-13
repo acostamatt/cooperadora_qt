@@ -84,14 +84,21 @@
            <x>0</x>
            <y>0</y>
            <width>160</width>
-           <height>116</height>
+           <height>156</height>
           </rect>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout_6">
           <item>
            <widget class="QPushButton" name="pushButton_5">
             <property name="text">
-             <string>Insertar</string>
+             <string>Agregar Socio</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButton_2">
+            <property name="text">
+             <string>Agregar Alumno</string>
             </property>
            </widget>
           </item>
@@ -198,8 +205,8 @@
    <slot>onClickedConsultaSocio()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>130</x>
-     <y>95</y>
+     <x>145</x>
+     <y>153</y>
     </hint>
     <hint type="destinationlabel">
      <x>197</x>
@@ -214,12 +221,28 @@
    <slot>onClickedConsultaAlumno()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>114</x>
-     <y>136</y>
+     <x>129</x>
+     <y>193</y>
     </hint>
     <hint type="destinationlabel">
      <x>196</x>
      <y>168</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_2</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>onClickedAltaAlumno()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>145</x>
+     <y>100</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>188</x>
+     <y>93</y>
     </hint>
    </hints>
   </connection>
@@ -228,5 +251,6 @@
   <slot>onClickedAltaSocio()</slot>
   <slot>onClickedConsultaSocio()</slot>
   <slot>onClickedConsultaAlumno()</slot>
+  <slot>onClickedAltaAlumno()</slot>
  </slots>
 </ui>

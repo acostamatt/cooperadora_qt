@@ -1,5 +1,5 @@
 from PyQt5.QtCore import QObject
-from models.socio import SocioThreadSave, SocioThreadUpdate
+from models.socio import SocioThreadSave
 from views.socio.form_socio import FormSocio
 
 class FormSocioController(QObject):
@@ -7,14 +7,10 @@ class FormSocioController(QObject):
         QObject.__init__(self)
         self.__socio_view = form_socio
         self.__socio_view_thread_save = SocioThreadSave()
-        self.__socio_view_thread_update = SocioThreadUpdate()
 
         self.__socio_view.saveSocioData.connect(self.__on_save_socio)
-        self.__socio_view.dniSocio.connect(self.__on_check_socio_dni)
 
         self.__socio_view_thread_save.statusSaveSocio.connect(self.__on_save_socio_checked)
-        self.__socio_view_thread_update.dataCheckSocio.connect(self.__on_save_socio_exist)
-        self.__socio_view_thread_update.statusCheckSocio.connect(self.__on_msj_status_socio_exist)
 
     def cleanLayout(self, layout):
         for i in range(layout.count()):
@@ -23,10 +19,6 @@ class FormSocioController(QObject):
     def __on_save_socio(self, dict_socio: dict):
         self.__socio_view_thread_save.start()
         self.__socio_view_thread_save.check_socio_data(dict_socio)
-
-    def __on_check_socio_dni(self, dni_socio: str):
-        self.__socio_view_thread_update.start()
-        self.__socio_view_thread_update.check_dni_socio(dni_socio)
 
     def __on_save_socio_checked(self, msj):
         self.__socio_view.set_msj_save_socio(msj)

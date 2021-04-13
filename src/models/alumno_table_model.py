@@ -15,8 +15,8 @@ class AlumnosTableModel(QAbstractTableModel):
         self.alumnos = Alumno.get_all_alumnos()
         self.modelReset.emit()
 
-    def refresh_data_search(self, search_txt: str):
-        self.alumnos = Alumno.get_search_alumnos(search_txt)
+    def refresh_data_search(self, search_txt: str, check_alumno: bool):
+        self.alumnos = Alumno.get_search_alumnos(search_txt, check_alumno)
         self.modelReset.emit()
 
     def rowCount(self, parent=None):

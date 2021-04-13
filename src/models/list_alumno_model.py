@@ -1,5 +1,13 @@
 from PyQt5.QtCore import QAbstractListModel, QModelIndex, Qt
+from models.socio import Socio
+from views.alumno.combo_box_extend import ExtendedComboBox
 
+
+class ListSocioModel():
+    def insert_data(self, modelComboBox: ExtendedComboBox):
+        self.list_socio = Socio.get_all_socios_name()
+        for socio in self.list_socio:
+            modelComboBox.addItem(socio['socio'], socio['id'])
 
 class ListGradoModel(QAbstractListModel):
     def __init__(self):

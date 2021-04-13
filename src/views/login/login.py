@@ -1,5 +1,6 @@
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import pyqtSignal
+from PyQt5.QtWidgets import QPushButton
 
 from views.login.login_base import Ui_Form
 
@@ -21,6 +22,7 @@ class Login(QtWidgets.QWidget):
         self.__label_msj = self.ui.label_msj
         self.__line_edit_user = self.ui.line_edit_user
         #self.setFixedSize(self.sizeHint())
+        self.set_icon_button(self.ui.boton_check, '../assets/icons/feather/log-in.svg')
         self.__line_edit_pass.setEchoMode(self.__line_edit_pass.Password)
         self.__boton_check.clicked.connect(self.on_enviar_click)
         self.__check_view_pass.clicked.connect(self.on_enviar_change_check_view)
@@ -45,4 +47,9 @@ class Login(QtWidgets.QWidget):
 
     def ocultar_pass(self):
         self.__line_edit_pass.setEchoMode(self.__line_edit_pass.Password)
+
+    def set_icon_button(self, buttonIcon: QPushButton, urlIcon):
+        buttonIcon.setIcon(QtGui.QIcon(urlIcon))
+        buttonIcon.setIconSize(QtCore.QSize(20, 20))
+        buttonIcon.setGeometry(QtCore.QRect(1030, 500, 161, 61))
 

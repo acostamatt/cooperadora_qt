@@ -1,7 +1,5 @@
 from PyQt5.QtCore import QAbstractTableModel, QModelIndex, Qt, QSize
-
 from models.socio import Socio
-
 
 class SociosTableModel(QAbstractTableModel):
     def __init__(self):
@@ -20,8 +18,8 @@ class SociosTableModel(QAbstractTableModel):
         self.socios = Socio.get_all_socios()
         self.modelReset.emit()
 
-    def refresh_data_search(self, search_txt: str):
-        self.socios = Socio.get_search_socios(search_txt)
+    def refresh_data_search(self, search_txt: str, check_socio):
+        self.socios = Socio.get_search_socios(search_txt, check_socio)
         self.modelReset.emit()
 
     def data(self, index: QModelIndex, role=None):

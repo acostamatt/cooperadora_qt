@@ -33,6 +33,16 @@
       </spacer>
      </item>
      <item>
+      <widget class="QCheckBox" name="checkBox">
+       <property name="text">
+        <string>Activo</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QLineEdit" name="lineEdit">
        <property name="maximumSize">
         <size>
@@ -114,6 +124,9 @@
    </item>
    <item>
     <layout class="QHBoxLayout" name="horizontalLayout">
+     <property name="spacing">
+      <number>10</number>
+     </property>
      <property name="topMargin">
       <number>0</number>
      </property>
@@ -131,7 +144,7 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton_2">
+      <widget class="QPushButton" name="updateButton">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -141,12 +154,12 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="pushButton">
+      <widget class="QPushButton" name="inactiveButton">
        <property name="enabled">
         <bool>false</bool>
        </property>
        <property name="text">
-        <string>Eliminar</string>
+        <string>Inactivar</string>
        </property>
       </widget>
      </item>
@@ -170,7 +183,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>pushButton_2</sender>
+   <sender>updateButton</sender>
    <signal>clicked()</signal>
    <receiver>TableSocio</receiver>
    <slot>clickedUpdateSocio()</slot>
@@ -186,7 +199,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>pushButton</sender>
+   <sender>inactiveButton</sender>
    <signal>clicked()</signal>
    <receiver>TableSocio</receiver>
    <slot>clickedDeleteSocio()</slot>

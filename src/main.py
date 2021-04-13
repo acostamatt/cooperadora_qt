@@ -3,10 +3,12 @@ import sys
 from PyQt5.QtWidgets import QApplication
 
 from controllers.form_socio import FormSocioController
+from controllers.form_alumno import FormAlumnoController
 from controllers.login import LoginController
 from controllers.main_window import MainWindowController
-from models.dbcon import DB
+from config.dbcon import DB
 from views.socio.form_socio import FormSocio
+from views.alumno.form_alumno import FormAlumno
 from views.login.login import Login
 from views.main_window.main_window import MainWindow
 
@@ -32,6 +34,10 @@ class App(QApplication):
     def show_form_socio_window(self):
         self.form_socio = FormSocioController(FormSocio())
         self.form_socio.show_view()
+
+    def show_form_alumno_window(self):
+        self.form_alumno = FormAlumnoController(FormAlumno())
+        self.form_alumno.show_view()
 
 if __name__ == "__main__":
     app = App()
