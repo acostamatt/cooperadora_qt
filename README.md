@@ -22,4 +22,4 @@ Luego ejecutamos el script correspondiente a nuestro sistema operativo. El .sh p
 
 ## Adicional
 
-Para ver las colecciones que vamos creando con mongoDB de manera gráfica, podemos intalar mongoDB compass.
+Para ver las colecciones que vamos creando con mongoDB de manera gráfica, podemos instalar mongoDB compass.
