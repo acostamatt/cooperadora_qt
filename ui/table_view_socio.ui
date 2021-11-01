@@ -159,7 +159,7 @@
         <bool>false</bool>
        </property>
        <property name="text">
-        <string>Inactivar</string>
+        <string>Archivar</string>
        </property>
       </widget>
      </item>

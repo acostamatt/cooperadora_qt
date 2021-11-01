@@ -4,8 +4,8 @@ from PyQt5.QtWidgets import QPushButton
 
 from models.list_alumno_model import ListGradoModel, ListTurnoModel, ListDivisionModel, ListSocioModel
 from views.alumno.combo_box_extend import ExtendedComboBox
-from views.alumno.form_alumno_base import Ui_FormAlumno
-from views.main_window.table_window_default import Ui_TableDefault
+from views.base.form_alumno_base import Ui_FormAlumno
+from views.base.table_window_default import Ui_TableDefault
 
 class FormAlumno(QtWidgets.QWidget):
     saveAlumnoData = pyqtSignal((dict,))

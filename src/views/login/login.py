@@ -2,7 +2,7 @@ from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QPushButton
 
-from views.login.login_base import Ui_Form
+from views.base.login_base import Ui_Form
 
 class Login(QtWidgets.QWidget):
     login_confirmado = pyqtSignal(str, str)

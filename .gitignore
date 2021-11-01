@@ -108,11 +108,4 @@ venv.bak/
 .idea
 .vscode
 src/resources.py
-src/views/alumno/form_alumno_update.py
-src/views/alumno/table_view_alumno.py
-src/views/login/login_base.py
-src/views/main_window/form_window_default.py
-src/views/main_window/main_window_base.py
-src/views/socio/form_socio_base.py
-src/views/socio/form_socio_update.py
-src/views/socio/table_view_socio.py
+src/views/base/

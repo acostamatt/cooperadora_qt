@@ -2,8 +2,8 @@ from PyQt5 import QtWidgets, QtGui, QtCore
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QPushButton
 
-from views.socio.form_socio_base import Ui_FormSocio
-from views.main_window.table_window_default import Ui_TableDefault
+from views.base.form_socio_base import Ui_FormSocio
+from views.base.table_window_default import Ui_TableDefault
 
 class FormSocio(QtWidgets.QWidget):
     saveSocioData = pyqtSignal((dict,))

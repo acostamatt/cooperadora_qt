@@ -7,12 +7,12 @@ from models.list_alumno_model import ListGradoModel, ListTurnoModel, ListDivisio
 from models.socio import Socio, Alumno
 from models.socio_table_model import SociosTableModel
 from views.alumno.combo_box_extend import ExtendedComboBox
-from views.alumno.form_alumno_base import Ui_FormAlumno
+from views.base.form_alumno_base import Ui_FormAlumno
 from views.socio.form_socio import FormSocioDefault
-from views.socio.form_socio_base import Ui_FormSocio
-from views.main_window.main_window_base import Ui_MainWindow
-from views.alumno.table_view_alumno import Ui_TableAlumno
-from views.socio.table_view_socio import Ui_TableSocio
+from views.base.form_socio_base import Ui_FormSocio
+from views.base.main_window_base import Ui_MainWindow
+from views.base.table_view_alumno import Ui_TableAlumno
+from views.base.table_view_socio import Ui_TableSocio
 
 class MainWindow(QtWidgets.QWidget):
     clickedNewSocio = pyqtSignal()
@@ -39,10 +39,10 @@ class MainWindow(QtWidgets.QWidget):
 
     def set_change_button_text_icon(self, check_value: bool, button_check: QPushButton):
         if check_value:
-            button_check.setText('Inactivar')
+            button_check.setText('Archivar')
             self.set_icon_button(button_check, '../assets/icons/feather/slash.svg')
         else:
-            button_check.setText('Activar')
+            button_check.setText('Recuperar')
             self.set_icon_button(button_check, '../assets/icons/feather/check-circle.svg')
 
     def onClickedAltaSocio(self):

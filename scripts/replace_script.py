@@ -1,9 +1,9 @@
 import os, sys
 
 if sys.platform == "win32":
-    path_login = r'..\src\views\login\login_base.py'
+    path_login = r'../src/views/base/login_base.py'
 else:
-    path_login = '../src/views/login/login_base.py'
+    path_login = '../src/views/base/login_base.py'
 
 file_content = open(path_login, 'r')
 content_data = file_content.read()
