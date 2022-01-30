@@ -105,14 +105,14 @@
           <item>
            <widget class="QPushButton" name="pushButton_6">
             <property name="text">
-             <string>Consultar Socio</string>
+             <string>Consultar Socios</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="pushButton">
             <property name="text">
-             <string>Consultar Alumno</string>
+             <string>Consultar Alumnos</string>
             </property>
            </widget>
           </item>
@@ -144,14 +144,14 @@
           <item>
            <widget class="QPushButton" name="pushButton_7">
             <property name="text">
-             <string>Registrar</string>
+             <string>Agregar Cobranza</string>
             </property>
            </widget>
           </item>
           <item>
            <widget class="QPushButton" name="pushButton_8">
             <property name="text">
-             <string>PushButton</string>
+             <string>Consultar Cobranzas</string>
             </property>
            </widget>
           </item>
@@ -189,11 +189,11 @@
    <slot>onClickedAltaSocio()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>129</x>
+     <x>174</x>
      <y>54</y>
     </hint>
     <hint type="destinationlabel">
-     <x>203</x>
+     <x>199</x>
      <y>63</y>
     </hint>
    </hints>
@@ -205,7 +205,7 @@
    <slot>onClickedConsultaSocio()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>145</x>
+     <x>174</x>
      <y>153</y>
     </hint>
     <hint type="destinationlabel">
@@ -221,7 +221,7 @@
    <slot>onClickedConsultaAlumno()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>129</x>
+     <x>174</x>
      <y>193</y>
     </hint>
     <hint type="destinationlabel">
@@ -237,12 +237,44 @@
    <slot>onClickedAltaAlumno()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>145</x>
+     <x>174</x>
      <y>100</y>
     </hint>
     <hint type="destinationlabel">
      <x>188</x>
      <y>93</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_7</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>onClickedAltaCobranza()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>174</x>
+     <y>99</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>105</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>pushButton_8</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>onClickedConsultaCobranza()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>174</x>
+     <y>138</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>199</x>
+     <y>144</y>
     </hint>
    </hints>
   </connection>
@@ -252,5 +284,7 @@
   <slot>onClickedConsultaSocio()</slot>
   <slot>onClickedConsultaAlumno()</slot>
   <slot>onClickedAltaAlumno()</slot>
+  <slot>onClickedAltaCobranza()</slot>
+  <slot>onClickedConsultaCobranza()</slot>
  </slots>
 </ui>
