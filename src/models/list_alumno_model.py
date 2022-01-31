@@ -1,6 +1,6 @@
 from models.socio import Alumno, Socio
 from PyQt5.QtCore import QAbstractListModel, QModelIndex, Qt
-from views.alumno.combo_box_extend import ExtendedComboBox
+from models.combo_box_extend import ExtendedComboBox
 
 
 class ListSocioModel:
