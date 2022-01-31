@@ -1,18 +1,30 @@
+from models.socio import Alumno, Socio
 from PyQt5.QtCore import QAbstractListModel, QModelIndex, Qt
-from models.socio import Socio
 from views.alumno.combo_box_extend import ExtendedComboBox
 
 
-class ListSocioModel():
+class ListSocioModel:
     def insert_data(self, modelComboBox: ExtendedComboBox):
         self.list_socio = Socio.get_all_socios_name()
         for socio in self.list_socio:
-            modelComboBox.addItem(socio['socio'], socio['id'])
+            modelComboBox.addItem(socio["socio"], socio["id"])
+
+
+class ListAlumnoModel:
+    def insert_data(self, modelComboBox: ExtendedComboBox, idSocio=None):
+        if idSocio:
+            self.list_alumno = Alumno.get_all_alumnos_name_by_socio(idSocio)
+        else:
+            self.list_alumno = Alumno.get_all_alumnos_name()
+
+        for alumno in self.list_alumno:
+            modelComboBox.addItem(alumno["alumno"], alumno["id"])
+
 
 class ListGradoModel(QAbstractListModel):
     def __init__(self):
         QAbstractListModel.__init__(self)
-        self.list_grado = [1,2,3,4,5,6,7]
+        self.list_grado = [1, 2, 3, 4, 5, 6, 7]
 
     def rowCount(self, parent=None):
         return len(self.list_grado)
@@ -29,8 +41,7 @@ class ListGradoModel(QAbstractListModel):
 class ListTurnoModel(QAbstractListModel):
     def __init__(self):
         QAbstractListModel.__init__(self)
-        self.list_turno = ['Mañana','Tarde']
-
+        self.list_turno = ["Mañana", "Tarde"]
 
     def rowCount(self, parent=None):
         return len(self.list_turno)
@@ -47,7 +58,7 @@ class ListTurnoModel(QAbstractListModel):
 class ListDivisionModel(QAbstractListModel):
     def __init__(self):
         QAbstractListModel.__init__(self)
-        self.list_division = ['A','B','C','D','E']
+        self.list_division = ["A", "B", "C", "D", "E"]
 
     def rowCount(self, parent=None):
         return len(self.list_division)
