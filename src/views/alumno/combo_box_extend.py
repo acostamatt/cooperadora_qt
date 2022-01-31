@@ -1,5 +1,5 @@
-from PyQt5.QtCore import Qt, QSortFilterProxyModel
-from PyQt5.QtWidgets import QCompleter, QComboBox
+from PyQt5.QtCore import QSortFilterProxyModel, Qt
+from PyQt5.QtWidgets import QComboBox, QCompleter
 
 
 class ExtendedComboBox(QComboBox):
@@ -36,4 +36,3 @@ class ExtendedComboBox(QComboBox):
         self.completer.setCompletionColumn(column)
         self.filter_model.setFilterKeyColumn(column)
         self.setModelColumn(column)
-

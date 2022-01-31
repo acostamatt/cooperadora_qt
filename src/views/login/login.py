@@ -1,12 +1,13 @@
-from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QPushButton
-
 from views.base.login_base import Ui_Form
+
 
 class Login(QtWidgets.QWidget):
     login_confirmado = pyqtSignal(str, str)
     change_check_view = pyqtSignal(bool)
+
     def __init__(self):
         QtWidgets.QWidget.__init__(self)
         self.ui = Ui_Form()
@@ -14,30 +15,33 @@ class Login(QtWidgets.QWidget):
 
     def setup(self):
         self.ui.setupUi(self)
-        #self.setFixedSize(self.sizeHint())
+        # self.setFixedSize(self.sizeHint())
         self.__label_img_user = self.ui.label_img_user
         self.__check_view_pass = self.ui.check_view_pass
         self.__line_edit_pass = self.ui.line_edit_pass
         self.__boton_check = self.ui.boton_check
         self.__label_msj = self.ui.label_msj
         self.__line_edit_user = self.ui.line_edit_user
-        #self.setFixedSize(self.sizeHint())
-        self.set_icon_button(self.ui.boton_check, '../assets/icons/feather/log-in.svg')
+        # self.setFixedSize(self.sizeHint())
+        self.set_icon_button(self.ui.boton_check, "../assets/icons/feather/log-in.svg")
         self.__line_edit_pass.setEchoMode(self.__line_edit_pass.Password)
         self.__boton_check.clicked.connect(self.on_enviar_click)
         self.__check_view_pass.clicked.connect(self.on_enviar_change_check_view)
 
     def on_enviar_click(self):
-        self.login_confirmado.emit(self.__line_edit_user.text(),
-                                   self.__line_edit_pass.text())
+        self.login_confirmado.emit(
+            self.__line_edit_user.text(), self.__line_edit_pass.text()
+        )
 
     def on_enviar_change_check_view(self):
         self.change_check_view.emit(self.__check_view_pass.isChecked())
 
     def mostrar_errores(self, errores: list):
         lista_errores = "<br>".join([f"- {msg}" for msg in errores])
-        mensaje_error = f"<div><h4>Hay errores:</h4></div>" \
-                        f"<div style='color:#FF0000'><strong>{lista_errores}</strong></div>"
+        mensaje_error = (
+            f"<div><h4>Hay errores:</h4></div>"
+            f"<div style='color:#FF0000'><strong>{lista_errores}</strong></div>"
+        )
         self.__label_msj.setText(mensaje_error)
         self.__label_msj.setMaximumSize(500, 500)
         self.__label_msj.show()
@@ -52,4 +56,3 @@ class Login(QtWidgets.QWidget):
         buttonIcon.setIcon(QtGui.QIcon(urlIcon))
         buttonIcon.setIconSize(QtCore.QSize(20, 20))
         buttonIcon.setGeometry(QtCore.QRect(1030, 500, 161, 61))
-

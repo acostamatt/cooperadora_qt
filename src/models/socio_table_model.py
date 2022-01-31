@@ -1,5 +1,6 @@
-from PyQt5.QtCore import QAbstractTableModel, QModelIndex, Qt, QSize
 from models.socio import Socio
+from PyQt5.QtCore import QAbstractTableModel, QModelIndex, QSize, Qt
+
 
 class SociosTableModel(QAbstractTableModel):
     def __init__(self):
@@ -27,7 +28,7 @@ class SociosTableModel(QAbstractTableModel):
 
         if role == Qt.DisplayRole:
             if index.column() == 0:
-                return socio.apellido+', '+socio.nombre
+                return socio.apellido + ", " + socio.nombre
 
             if index.column() == 1:
                 return socio.dni

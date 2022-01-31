@@ -1,6 +1,7 @@
-from PyQt5.QtCore import QObject
 from models.socio import AlumnoThreadSave
+from PyQt5.QtCore import QObject
 from views.alumno.form_alumno import FormAlumno
+
 
 class FormAlumnoController(QObject):
     def __init__(self, form_alumno: FormAlumno):
@@ -10,7 +11,9 @@ class FormAlumnoController(QObject):
 
         self.__alumno_view.saveAlumnoData.connect(self.__on_save_alumno)
 
-        self.__alumno_view_thread_save.statusSaveAlumno.connect(self.__on_save_alumno_checked)
+        self.__alumno_view_thread_save.statusSaveAlumno.connect(
+            self.__on_save_alumno_checked
+        )
 
     def cleanLayout(self, layout):
         for i in range(layout.count()):

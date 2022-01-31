@@ -1,7 +1,6 @@
-from PyQt5 import QtCore
-from PyQt5.QtCore import QSize, Qt, QModelIndex, QAbstractTableModel
-
 from models.socio import Alumno
+from PyQt5 import QtCore
+from PyQt5.QtCore import QAbstractTableModel, QModelIndex, QSize, Qt
 
 
 class AlumnosTableModel(QAbstractTableModel):
@@ -30,7 +29,7 @@ class AlumnosTableModel(QAbstractTableModel):
         socio = Alumno.get_socio_by_alumno(alumno.id)
         if role == Qt.DisplayRole:
             if index.column() == 0:
-                return alumno.apellido+', '+alumno.nombre
+                return alumno.apellido + ", " + alumno.nombre
 
             if index.column() == 1:
                 return alumno.grado

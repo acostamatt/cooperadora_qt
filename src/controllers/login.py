@@ -1,11 +1,12 @@
-from PyQt5.QtCore import QObject, pyqtSignal
-
 from models.usuario import UserThread
+from PyQt5.QtCore import QObject, pyqtSignal
 from views.login.login import Login
 from views.main_window.main_window import MainWindow
 
+
 class LoginController(QObject):
     loginUser = pyqtSignal()
+
     def __init__(self, view: Login):
         QObject.__init__(self)
         self.__view_login = view
@@ -22,7 +23,7 @@ class LoginController(QObject):
             self.__view_login.ocultar_pass()
 
     def __on_login_confirmado(self, user, passw):
-        if user == '' or passw == '':
+        if user == "" or passw == "":
             self.errores.append("Debe ingresar usuario y contraseña.")
             self.__view_login.mostrar_errores(self.errores)
             self.errores[:] = []
@@ -32,7 +33,7 @@ class LoginController(QObject):
             self.__server_user.start()
 
     def __on_checked_user(self, msj_error):
-        if msj_error != '':
+        if msj_error != "":
             self.errores.append(msj_error)
             self.__view_login.mostrar_errores(self.errores)
             self.errores[:] = []
