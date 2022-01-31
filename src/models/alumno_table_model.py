@@ -1,6 +1,7 @@
-from models.socio import Alumno
 from PyQt5 import QtCore
 from PyQt5.QtCore import QAbstractTableModel, QModelIndex, QSize, Qt
+
+from models.socio import Alumno
 
 
 class AlumnosTableModel(QAbstractTableModel):

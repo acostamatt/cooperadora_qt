@@ -1,5 +1,6 @@
-from models.socio import Socio
 from PyQt5.QtCore import QAbstractTableModel, QModelIndex, QSize, Qt
+
+from models.socio import Socio
 
 
 class SociosTableModel(QAbstractTableModel):

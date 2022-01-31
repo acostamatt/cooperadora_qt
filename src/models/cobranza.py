@@ -5,10 +5,7 @@ from PyQt5.QtCore import QThread, pyqtSignal
 
 
 class Cobranza(mongoengine.Document):
-<<<<<<< Updated upstream
-=======
     nroDocumento = mongoengine.SequenceField()
->>>>>>> Stashed changes
     socio = mongoengine.ReferenceField("Socio")
     alumno = mongoengine.ReferenceField("Alumno")
     formaPago = mongoengine.StringField(required=True, max_length=25)

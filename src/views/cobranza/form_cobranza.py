@@ -1,10 +1,11 @@
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtWidgets import QPushButton
+
+from models.combo_box_extend import ExtendedComboBox
 from models.list_alumno_model import ListAlumnoModel, ListSocioModel
 from models.list_forma_pago_model import ListFormaPagoModel
 from models.list_mes_model import ListMesModel
-from PyQt5 import QtCore, QtGui, QtWidgets, sip
-from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtWidgets import QComboBox, QPushButton
-from views.alumno.combo_box_extend import ExtendedComboBox
 from views.base.form_cobranza_base import Ui_FormCobranza
 
 

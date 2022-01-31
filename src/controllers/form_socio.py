@@ -1,5 +1,6 @@
-from models.socio import SocioThreadSave
 from PyQt5.QtCore import QObject
+
+from models.socio import SocioThreadSave
 from views.socio.form_socio import FormSocio
 
 

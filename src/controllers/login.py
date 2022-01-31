@@ -1,5 +1,6 @@
-from models.usuario import UserThread
 from PyQt5.QtCore import QObject, pyqtSignal
+
+from models.usuario import UserThread
 from views.login.login import Login
 from views.main_window.main_window import MainWindow
 
