@@ -66,10 +66,8 @@ class FormCobranza(QtWidgets.QWidget):
         self.dict_cobranza = dict()
         self.dict_cobranza["socio"] = self.combo_box_socio.currentData(Qt.UserRole)
         self.dict_cobranza["alumno"] = self.combo_box_alumno.currentData(Qt.UserRole)
-        self.dict_cobranza["forma_pago"] = self.ui.comboBoxFormaPago.currentData(
-            Qt.UserRole
-        )
-        self.dict_cobranza["mes"] = self.ui.comboBoxMes.currentData(Qt.UserRole)
+        self.dict_cobranza["forma_pago"] = self.ui.comboBoxFormaPago.currentText()
+        self.dict_cobranza["mes"] = self.ui.comboBoxMes.currentText()
         self.dict_cobranza["monto"] = self.ui.lineEditMontoCobranza.text()
 
         self.saveCobranzaData.emit(self.dict_cobranza)
