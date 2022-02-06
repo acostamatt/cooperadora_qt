@@ -11,5 +11,6 @@ pyuic5 ../ui/login_base.ui -o ../src/views/base/login_base.py
 pyuic5 ../ui/main_window_base.ui -o ../src/views/base/main_window_base.py
 pyuic5 ../ui/table_view_alumno.ui -o ../src/views/base/table_view_alumno.py
 pyuic5 ../ui/table_view_socio.ui -o ../src/views/base/table_view_socio.py
+pyuic5 ../ui/table_view_cobranza.ui -o ../src/views/base/table_view_cobranza.py
 
 python replace_script.py
