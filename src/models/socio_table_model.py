@@ -1,13 +1,12 @@
-from PyQt5.QtCore import QAbstractTableModel, QModelIndex, QSize, Qt
-
 from models.socio import Socio
+from PyQt5.QtCore import QAbstractTableModel, QModelIndex, QSize, Qt
 
 
 class SociosTableModel(QAbstractTableModel):
     def __init__(self):
         QAbstractTableModel.__init__(self)
-        self.headers = ["Socio", "DNI", "Cant. Alumnos", "Domicilio"]
-        self.headers_widths = [1, 1, 1, 1]
+        self.headers = ["Socio", "DNI", "Cant. Alumnos", "Domicilio", "Teléfono"]
+        self.headers_widths = [300, 100, 100, 300, 100]
         self.socios = []
 
     def rowCount(self, parent=None):
@@ -40,6 +39,9 @@ class SociosTableModel(QAbstractTableModel):
             if index.column() == 3:
                 return socio.domicilio
 
+            if index.column() == 4:
+                return socio.telefono
+
         if role == Qt.UserRole:
             return socio.id
 
@@ -49,4 +51,4 @@ class SociosTableModel(QAbstractTableModel):
                 return self.headers[section]
 
             if role == Qt.SizeHintRole:
-                return QSize(self.headers_widths[section], 23)  # 23, numero mágico (?
+                return QSize(self.headers_widths[section], 23)

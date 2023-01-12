@@ -1,7 +1,3 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt, pyqtSignal
-from PyQt5.QtWidgets import QPushButton
-
 from models.combo_box_extend import ExtendedComboBox
 from models.list_alumno_model import (
     ListDivisionModel,
@@ -9,6 +5,9 @@ from models.list_alumno_model import (
     ListSocioModel,
     ListTurnoModel,
 )
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import Qt, pyqtSignal
+from PyQt5.QtWidgets import QPushButton
 from views.base.form_alumno_base import Ui_FormAlumno
 from views.base.table_window_default import Ui_TableDefault
 

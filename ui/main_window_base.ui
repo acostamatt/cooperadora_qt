@@ -129,7 +129,7 @@
          </rect>
         </property>
         <attribute name="label">
-         <string>Cuotas</string>
+         <string>Cobranzas</string>
         </attribute>
         <widget class="QWidget" name="verticalLayoutWidget_4">
          <property name="geometry">
@@ -176,7 +176,7 @@
     </layout>
    </item>
    <item>
-    <layout class="QVBoxLayout" name="layoutFormSocio"/>
+    <layout class="QVBoxLayout" name="layoutTableView"/>
    </item>
   </layout>
  </widget>

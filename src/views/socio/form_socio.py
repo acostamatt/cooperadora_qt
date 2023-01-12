@@ -1,7 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import QPushButton
-
 from views.base.form_socio_base import Ui_FormSocio
 from views.base.table_window_default import Ui_TableDefault
 

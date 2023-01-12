@@ -1,6 +1,5 @@
-from PyQt5.QtCore import QObject
-
 from models.cobranza import CobranzaThreadSave
+from PyQt5.QtCore import QObject
 from views.cobranza.form_cobranza import FormCobranza
 
 

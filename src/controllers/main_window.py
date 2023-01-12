@@ -1,8 +1,7 @@
-from PyQt5.QtCore import QObject
-
 from controllers.form_alumno import FormAlumnoController
 from controllers.form_cobranza import FormCobranzaController
 from controllers.form_socio import FormSocioController
+from PyQt5.QtCore import QObject
 from views.alumno.form_alumno import FormAlumno
 from views.cobranza.form_cobranza import FormCobranza
 from views.main_window.main_window import MainWindow

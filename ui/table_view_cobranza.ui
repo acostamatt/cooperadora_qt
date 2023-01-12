@@ -20,6 +20,19 @@
       <number>0</number>
      </property>
      <item>
+      <widget class="QCheckBox" name="checkBox">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="text">
+        <string>Anulada</string>
+       </property>
+       <property name="checked">
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer_5">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
@@ -33,12 +46,33 @@
       </spacer>
      </item>
      <item>
+      <widget class="QPushButton" name="pushButtonSearch">
+       <property name="text">
+        <string>Buscar</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_2">
+       <property name="text">
+        <string>Desde</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QDateEdit" name="dateEditDesde">
        <property name="displayFormat">
         <string>yyyy-MM-dd</string>
        </property>
        <property name="calendarPopup">
         <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label">
+       <property name="text">
+        <string>Hasta</string>
        </property>
       </widget>
      </item>
@@ -53,19 +87,6 @@
       </widget>
      </item>
      <item>
-      <widget class="QCheckBox" name="checkBox">
-       <property name="enabled">
-        <bool>true</bool>
-       </property>
-       <property name="text">
-        <string>Anulada</string>
-       </property>
-       <property name="checked">
-        <bool>true</bool>
-       </property>
-      </widget>
-     </item>
-     <item>
       <widget class="QLineEdit" name="lineEdit">
        <property name="maximumSize">
         <size>
@@ -74,7 +95,7 @@
         </size>
        </property>
        <property name="placeholderText">
-        <string>Buscar</string>
+        <string>Filtrar</string>
        </property>
       </widget>
      </item>
@@ -130,19 +151,6 @@
        </property>
       </widget>
      </item>
-     <item>
-      <spacer name="horizontalSpacer_4">
-       <property name="orientation">
-        <enum>Qt::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
     </layout>
    </item>
    <item>
@@ -167,7 +175,17 @@
       </spacer>
      </item>
      <item>
-      <widget class="QPushButton" name="anularCupon">
+      <widget class="QPushButton" name="verCobranzaAnulada">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
+       <property name="text">
+        <string>Ver</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="anularCobranza">
        <property name="enabled">
         <bool>false</bool>
        </property>
@@ -206,10 +224,10 @@
  <resources/>
  <connections>
   <connection>
-   <sender>anularCupon</sender>
+   <sender>anularCobranza</sender>
    <signal>clicked()</signal>
    <receiver>TableCobranza</receiver>
-   <slot>clickedAnularCobranza()</slot>
+   <slot>clickedAnularCobranzaMain()</slot>
    <hints>
     <hint type="sourcelabel">
      <x>294</x>
@@ -222,24 +240,26 @@
    </hints>
   </connection>
   <connection>
-   <sender>emitirCupon</sender>
+   <sender>verCobranzaAnulada</sender>
    <signal>clicked()</signal>
    <receiver>TableCobranza</receiver>
-   <slot>clickedEmitCupon()</slot>
+   <slot>clickedVerCobranzaAnulada()</slot>
    <hints>
     <hint type="sourcelabel">
-     <x>400</x>
-     <y>292</y>
+     <x>228</x>
+     <y>272</y>
     </hint>
     <hint type="destinationlabel">
-     <x>404</x>
-     <y>295</y>
+     <x>305</x>
+     <y>149</y>
     </hint>
    </hints>
   </connection>
  </connections>
  <slots>
   <slot>clickedEmitCupon()</slot>
-  <slot>clickedAnularCobranza()</slot>
+  <slot>clickedAnularCobranzaMain()</slot>
+  <slot>clickedBuscarCobranzas()</slot>
+  <slot>clickedVerCobranzaAnulada()</slot>
  </slots>
 </ui>

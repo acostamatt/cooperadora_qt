@@ -1,14 +1,13 @@
+from models.socio import Alumno
 from PyQt5 import QtCore
 from PyQt5.QtCore import QAbstractTableModel, QModelIndex, QSize, Qt
-
-from models.socio import Alumno
 
 
 class AlumnosTableModel(QAbstractTableModel):
     def __init__(self):
         QAbstractTableModel.__init__(self)
-        self.headers = ["Alumno", "Grado", "Division", "Turno", "Socio"]
-        self.headers_widths = [200, 200, 200, 200, 200]
+        self.headers = ["Alumno", "Socio", "Grado", "Division", "Turno"]
+        self.headers_widths = [350, 350, 100, 100, 100]
         self.alumnos = []
 
     def refresh_data(self):
@@ -33,16 +32,16 @@ class AlumnosTableModel(QAbstractTableModel):
                 return alumno.apellido + ", " + alumno.nombre
 
             if index.column() == 1:
-                return alumno.grado
+                return socio
 
             if index.column() == 2:
-                return alumno.division
+                return alumno.grado
 
             if index.column() == 3:
-                return alumno.turno
+                return alumno.division
 
             if index.column() == 4:
-                return socio
+                return alumno.turno
 
         if role == Qt.UserRole:
             return alumno.id

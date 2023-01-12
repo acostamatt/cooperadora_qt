@@ -4,7 +4,7 @@ from PyQt5.QtCore import QAbstractListModel, QModelIndex, Qt
 class ListFormaPagoModel(QAbstractListModel):
     def __init__(self):
         QAbstractListModel.__init__(self)
-        self.list_forma_pago = ["Efectivo", "Transferencia"]
+        self.list_forma_pago = ["Efectivo", "Cheque"]
 
     def rowCount(self, parent=None):
         return len(self.list_forma_pago)

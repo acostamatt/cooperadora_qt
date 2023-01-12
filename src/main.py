@@ -1,12 +1,11 @@
 import sys
 
-from PyQt5.QtWidgets import QApplication
-
 from config.dbcon import DB
 from controllers.form_alumno import FormAlumnoController
 from controllers.form_socio import FormSocioController
 from controllers.login import LoginController
 from controllers.main_window import MainWindowController
+from PyQt5.QtWidgets import QApplication
 from views.alumno.form_alumno import FormAlumno
 from views.login.login import Login
 from views.main_window.main_window import MainWindow

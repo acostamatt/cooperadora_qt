@@ -65,7 +65,7 @@ class Socio(mongoengine.Document):
             )
             return "Socio actualizado correctamente."
         except:
-            return "Error al actualizar Socio."
+            return ""
 
     @classmethod
     def delete_socio(cls, id_socio):
@@ -90,18 +90,13 @@ class Socio(mongoengine.Document):
         socios = cls.objects.filter(filters)
 
         if len(socios) == 0:
-            filters = Q(domicilio__icontains=str_search) & Q(
-                activo__icontains=check_socio
-            )
-            socios = cls.objects.filter(filters)
-
-        if len(socios) == 0:
             try:
-                str_search = int(str_search)
                 socios = cls.objects.filter(
                     Q(
                         __raw__={
-                            "$where": "this.dni.toString().match({})".format(str_search)
+                            "$where": "this.dni.toString().match({})".format(
+                                int(str_search)
+                            )
                         }
                     )
                     & Q(activo__icontains=check_socio)
@@ -110,13 +105,18 @@ class Socio(mongoengine.Document):
                 socios = []
 
         if len(socios) == 0:
+            filters = Q(domicilio__icontains=str_search) & Q(
+                activo__icontains=check_socio
+            )
+            socios = cls.objects.filter(filters)
+
+        if len(socios) == 0:
             try:
-                str_search = int(str_search)
                 socios = cls.objects.filter(
                     Q(
                         __raw__={
                             "$where": "this.telefono.toString().match({})".format(
-                                str_search
+                                int(str_search)
                             )
                         }
                     )
@@ -264,42 +264,41 @@ class Alumno(mongoengine.Document):
             )
             return "Alumno actualizado correctamente."
         except:
-            return "Error al actualizar."
+            return ""
 
     @classmethod
-    def delete_alumno(cls, id_alumno):
+    def change_status_alumno(cls, id_alumno):
         obj_alumno = cls.objects(id=id_alumno).get()
         if obj_alumno.activo:
             msj = "Datos del alumno inactivados correctamente."
         else:
             msj = "Datos del alumno activados correctamente."
+
         obj_alumno.activo = not obj_alumno.activo
         obj_alumno.update(activo=obj_alumno.activo)
         obj_socio = Socio.objects.get(alumnos__contains=obj_alumno.id)
 
         check_inactive_alumnos = True
+        socio_check_active = False
         for list_alumnos in obj_socio.alumnos:
             obj_alumno_check = cls.objects(id=list_alumnos.id).get()
             if obj_alumno_check.activo:
                 check_inactive_alumnos = False
+                socio_check_active = True
 
         if check_inactive_alumnos:
             if obj_alumno.activo:
-                msj = "Datos del alumno y el socio activados correctamente."
+                msj = "Datos del alumno y el socio recuperados correctamente."
             else:
-                msj = "Datos del alumno y el socio inactivados correctamente."
-            obj_socio.activo = not obj_socio.activo
-            obj_socio.update(activo=obj_socio.activo)
+                msj = "Datos del alumno y el socio archivados correctamente."
 
-        if not obj_socio.activo and obj_alumno.activo:
-            obj_socio.activo = not obj_socio.activo
-            obj_socio.update(activo=obj_socio.activo)
+        obj_socio.update(activo=socio_check_active)
+
         return msj
 
     @classmethod
     def get_search_alumnos(cls, str_search, check_alumno):
         alumnos = []
-        socios = []
         if len(str_search) > 1:
             filters = (
                 Q(nombre__icontains=str_search) | Q(apellido__icontains=str_search)
@@ -318,13 +317,12 @@ class Alumno(mongoengine.Document):
 
         if len(alumnos) == 0:
             try:
-                str_search = int(str_search)
                 if len(str(str_search)) == 1:
                     alumnos = cls.objects.filter(
                         Q(
                             __raw__={
                                 "$where": "this.grado.toString().match({})".format(
-                                    str_search
+                                    int(str_search)
                                 )
                             }
                         )

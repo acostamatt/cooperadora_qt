@@ -1,6 +1,5 @@
-from PyQt5.QtCore import QObject
-
 from models.socio import AlumnoThreadSave
+from PyQt5.QtCore import QObject
 from views.alumno.form_alumno import FormAlumno
 
 

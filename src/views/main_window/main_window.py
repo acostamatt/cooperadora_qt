@@ -1,8 +1,8 @@
-from PyQt5 import QtCore, QtGui, QtTest, QtWidgets
-from PyQt5.QtCore import QAbstractTableModel, QModelIndex, Qt, pyqtSignal
-from PyQt5.QtWidgets import QPushButton
+import datetime
 
 from models.alumno_table_model import AlumnosTableModel
+from models.cobranza import Cobranza
+from models.cobranza_table_model import CobranzasTableModel
 from models.combo_box_extend import ExtendedComboBox
 from models.list_alumno_model import (
     ListDivisionModel,
@@ -12,11 +12,17 @@ from models.list_alumno_model import (
 )
 from models.socio import Alumno, Socio
 from models.socio_table_model import SociosTableModel
+from PyQt5 import QtCore, QtGui, QtTest, QtWidgets
+from PyQt5.QtCore import QAbstractTableModel, QDateTime, QModelIndex, Qt, pyqtSignal
+from PyQt5.QtWidgets import QPushButton
 from views.base.form_alumno_base import Ui_FormAlumno
 from views.base.form_socio_base import Ui_FormSocio
 from views.base.main_window_base import Ui_MainWindow
 from views.base.table_view_alumno import Ui_TableAlumno
+from views.base.table_view_cobranza import Ui_TableCobranza
 from views.base.table_view_socio import Ui_TableSocio
+from views.base.view_cobranza_anulada import Ui_ViewCobranzaAnulada
+from views.cobranza.form_cobranza import Ui_FormAnularCobranza
 from views.socio.form_socio import FormSocioDefault
 
 
@@ -30,7 +36,7 @@ class MainWindow(QtWidgets.QWidget):
         self.ui = Ui_MainWindow()
         self.form_socio_default = FormSocioDefault()
         self.setup()
-        self.ui.layoutFormSocio.addWidget(self.form_socio_default)
+        self.ui.layoutTableView.addWidget(self.form_socio_default)
         self.setFixedWidth(600)
 
     def setup(self):
@@ -57,6 +63,47 @@ class MainWindow(QtWidgets.QWidget):
                 button_check, "../assets/icons/feather/check-circle.svg"
             )
 
+    def set_change_button_text_icon_cobranza(self, table: object):
+        if table.checkBox.isChecked():
+            table.verCobranzaAnulada.show()
+            table.anularCobranza.hide()
+            self.set_icon_button(
+                table.verCobranzaAnulada, "../assets/icons/feather/eye.svg"
+            )
+
+        else:
+            table.anularCobranza.show()
+            table.verCobranzaAnulada.hide()
+
+            self.set_icon_button(
+                table.anularCobranza, "../assets/icons/feather/slash.svg"
+            )
+
+        self.set_icon_button(
+            table.emitirCupon, "../assets/icons/feather/external-link.svg"
+        )
+
+        self.set_icon_button(
+            table.pushButtonSearch, "../assets/icons/feather/search.svg"
+        )
+
+    def set_alumnos_table_model(self, model):
+        self.ui.tableView.setModel(model)
+        model.refresh_data()
+
+    def set_date_today(self, date_time_widget: QDateTime):
+        date_time_widget.setDateTime(QtCore.QDateTime.currentDateTime())
+
+    def set_date_previous_month(self, date_time_widget: QDateTime):
+        fecha_desde = QtCore.QDateTime.addMonths(QtCore.QDateTime.currentDateTime(), -1)
+        date_time_widget.setDateTime(fecha_desde)
+
+    def set_date_from(self, date_time_widget: QDateTime, from_date: str):
+        date_time_widget.setDateTime(datetime.datetime.strptime(from_date, "%Y-%m-%d"))
+
+    def set_date_until(self, date_time_widget: QDateTime, until_date: str):
+        date_time_widget.setDateTime(datetime.datetime.strptime(until_date, "%Y-%m-%d"))
+
     def onClickedAltaSocio(self):
         self.clickedNewSocio.emit()
 
@@ -66,41 +113,67 @@ class MainWindow(QtWidgets.QWidget):
     def onClickedConsultaSocio(self):
         self.__table_socio = TableSocio(self)
         self.__table_model_socio = SociosTableModel()
-        self.cleanLayout(self.ui.layoutFormSocio)
+        self.cleanLayout(self.ui.layoutTableView)
         self.__table_socio.set_socios_table_model(self.__table_model_socio)
-        self.ui.layoutFormSocio.addWidget(self.__table_socio)
+        self.ui.layoutTableView.addWidget(self.__table_socio)
         self.setFixedWidth(1000)
 
     def onSearchConsultaSocio(self, search_str: str, check_socio: bool):
         self.__table_socio = TableSocio(self)
         self.__table_model_socio = SociosTableModel()
-        self.cleanLayout(self.ui.layoutFormSocio)
+        self.cleanLayout(self.ui.layoutTableView)
         self.__table_socio.set_socios_table_model_search(
             self.__table_model_socio, search_str, check_socio
         )
-        self.ui.layoutFormSocio.addWidget(self.__table_socio)
+        self.ui.layoutTableView.addWidget(self.__table_socio)
         self.setFixedWidth(1000)
 
     def onClickedConsultaAlumno(self):
         self.__table_alumno = TableAlumno(self)
         self.__table_model_alumno = AlumnosTableModel()
-        self.cleanLayout(self.ui.layoutFormSocio)
+        self.cleanLayout(self.ui.layoutTableView)
         self.__table_alumno.set_alumnos_table_model(self.__table_model_alumno)
-        self.ui.layoutFormSocio.addWidget(self.__table_alumno)
+        self.ui.layoutTableView.addWidget(self.__table_alumno)
         self.setFixedWidth(1000)
 
     def onSearchConsultaAlumno(self, search_str: str, check_alumno: bool):
         self.__table_alumno = TableAlumno(self)
         self.__table_model_alumno = AlumnosTableModel()
-        self.cleanLayout(self.ui.layoutFormSocio)
+        self.cleanLayout(self.ui.layoutTableView)
         self.__table_alumno.set_alumnos_table_model_search(
             self.__table_model_alumno, search_str, check_alumno
         )
-        self.ui.layoutFormSocio.addWidget(self.__table_alumno)
+        self.ui.layoutTableView.addWidget(self.__table_alumno)
         self.setFixedWidth(1000)
 
     def onClickedAltaCobranza(self):
         self.clickedNewCobranza.emit()
+
+    def onClickedConsultaCobranza(self):
+        self.__table_cobranza = TableCobranza(self)
+        self.__table_model_cobranza = CobranzasTableModel()
+        self.cleanLayout(self.ui.layoutTableView)
+        self.__table_cobranza.set_cobranza_table_model(self.__table_model_cobranza)
+        self.ui.layoutTableView.addWidget(self.__table_cobranza)
+        self.setFixedWidth(1100)
+        self.set_date_previous_month(self.__table_cobranza.ui.dateEditDesde)
+        self.set_date_today(self.__table_cobranza.ui.dateEditHasta)
+
+    def onSearchConsultaCobranza(self, data_cobranza: dict):
+        self.__table_cobranza = TableCobranza(self)
+        self.__table_model_cobranza = CobranzasTableModel()
+        self.cleanLayout(self.ui.layoutTableView)
+        self.__table_cobranza.set_cobranzas_table_model_search(
+            self.__table_model_cobranza, data_cobranza
+        )
+        self.ui.layoutTableView.addWidget(self.__table_cobranza)
+        self.setFixedWidth(1100)
+        self.set_date_from(
+            self.__table_cobranza.ui.dateEditDesde, data_cobranza["fecha_desde"]
+        )
+        self.set_date_until(
+            self.__table_cobranza.ui.dateEditHasta, data_cobranza["fecha_hasta"]
+        )
 
     def cleanLayout(self, layout):
         for i in range(layout.count()):
@@ -120,8 +193,6 @@ class TableAlumno(QtWidgets.QWidget):
         self.ui.tableView.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignVCenter)
         self.alumno_table_model = AlumnosTableModel()
 
-        # self.ui.lineEdit.setFocus(True)
-        # self.ui.lineEdit.nextInFocusChain()
         self.main_window.set_icon_button(
             self.ui.updateButton, "../assets/icons/feather/edit.svg"
         )
@@ -134,14 +205,20 @@ class TableAlumno(QtWidgets.QWidget):
 
     def set_alumnos_table_model(self, model):
         self.ui.tableView.setModel(model)
-        self.ui.tableView.setColumnWidth(0, 250)
+
+        self.header = self.ui.tableView.horizontalHeader()
+        self.header.setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+
         model.refresh_data()
 
     def set_alumnos_table_model_search(
         self, model: QAbstractTableModel, search_str: str, check_alumno: bool
     ):
         self.ui.tableView.setModel(model)
-        self.ui.tableView.setColumnWidth(0, 250)
+
+        self.header = self.ui.tableView.horizontalHeader()
+        self.header.setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+
         model.refresh_data_search(search_str, check_alumno)
         self.ui.lineEdit.setText(search_str)
         self.ui.checkBox.setChecked(check_alumno)
@@ -170,7 +247,7 @@ class TableAlumno(QtWidgets.QWidget):
 
     def clickedDeleteAlumno(self):
 
-        self.msj = Alumno.delete_alumno(self.id_alumno)
+        self.msj = Alumno.change_status_alumno(self.id_alumno)
         if self.ui.checkBox.isChecked():
             self.msj = f"<div style='color:#FF0000'><strong>{self.msj}</strong></div>"
         else:
@@ -208,14 +285,21 @@ class TableSocio(QtWidgets.QWidget):
 
     def set_socios_table_model(self, model: QAbstractTableModel):
         self.ui.tableView.setModel(model)
-        self.ui.tableView.setColumnWidth(0, 250)
+
+        self.header = self.ui.tableView.horizontalHeader()
+        self.header.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+
         model.refresh_data()
 
     def set_socios_table_model_search(
         self, model: QAbstractTableModel, search_str: str, check_socio: bool
     ):
         self.ui.tableView.setModel(model)
-        self.ui.tableView.setColumnWidth(0, 250)
+        self.header = self.ui.tableView.horizontalHeader()
+        self.header.setSectionResizeMode(QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(0, QtWidgets.QHeaderView.Stretch)
+
         model.refresh_data_search(search_str, check_socio)
         self.ui.lineEdit.setText(search_str)
         self.ui.checkBox.setChecked(check_socio)
@@ -252,6 +336,92 @@ class TableSocio(QtWidgets.QWidget):
         QtTest.QTest.qWait(800)
 
         self.main_window.onClickedConsultaSocio()
+
+
+class TableCobranza(QtWidgets.QWidget):
+    def __init__(self, main_window: MainWindow):
+        QtWidgets.QWidget.__init__(self)
+        self.main_window = main_window
+        self.ui = Ui_TableCobranza()
+
+        self.setup()
+
+    def setup(self):
+        self.ui.setupUi(self)
+        self.ui.tableView.setStyleSheet("* { gridline-color: transparent }")
+        self.ui.tableView.horizontalHeader().setDefaultAlignment(QtCore.Qt.AlignVCenter)
+
+        self.main_window.set_change_button_text_icon_cobranza(self.ui)
+
+        self.ui.tableView.clicked.connect(self.__on_table_clicked)
+        self.ui.lineEdit.returnPressed.connect(self.__on_enter_pressed_cobranza)
+        self.ui.checkBox.clicked.connect(self.__on_enter_pressed_cobranza)
+        self.ui.pushButtonSearch.clicked.connect(self.__on_enter_pressed_cobranza)
+
+    def set_cobranza_table_model(self, model):
+        self.ui.tableView.setModel(model)
+
+        self.header = self.ui.tableView.horizontalHeader()
+        self.header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+
+        model.refresh_data()
+
+    def set_cobranzas_table_model_search(
+        self, model: QAbstractTableModel, data_cobranza: dict
+    ):
+        self.ui.tableView.setModel(model)
+
+        self.header = self.ui.tableView.horizontalHeader()
+        self.header.setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+        self.header.setSectionResizeMode(QtWidgets.QHeaderView.Stretch)
+
+        model.refresh_data_search(data_cobranza)
+
+        self.ui.lineEdit.setText(data_cobranza["search_str"])
+        self.ui.checkBox.setChecked(data_cobranza["anulada"])
+        self.ui.lineEdit.installEventFilter(self)
+        self.ui.checkBox.installEventFilter(self)
+        self.main_window.set_change_button_text_icon_cobranza(self.ui)
+
+    def __on_enter_pressed_cobranza(self):
+        self.cobranza_search = dict()
+        self.cobranza_search["fecha_desde"] = self.ui.dateEditDesde.text()
+        self.cobranza_search["fecha_hasta"] = self.ui.dateEditHasta.text()
+        self.cobranza_search["search_str"] = self.ui.lineEdit.text()
+        self.cobranza_search["anulada"] = self.ui.checkBox.isChecked()
+
+        self.main_window.onSearchConsultaCobranza(self.cobranza_search)
+
+    def __on_table_clicked(self, index: QModelIndex):
+        self.ui.anularCobranza.setEnabled(True)
+        self.ui.emitirCupon.setEnabled(True)
+        self.ui.verCobranzaAnulada.setEnabled(True)
+        self.id_cobranza = str(index.data(Qt.UserRole))
+
+    def changeSocioSelected(self):
+        self.combo_box_alumno.clear()
+        self.set_filter_alumno_model(
+            self.list_model_alumno,
+            self.combo_box_alumno,
+            self.combo_box_socio.currentData(Qt.UserRole),
+        )
+        self.combo_box_alumno.setCurrentIndex(-1)
+
+    def clickedAnularCobranzaMain(self):
+        self.cobranza_form_anular = CobranzaAnularWindow(
+            self.id_cobranza, self.main_window, self.ui.labelMsj
+        )
+        self.cobranza_form_anular.show()
+
+    def clickedVerCobranzaAnulada(self):
+        self.data_cobranza = Cobranza.get_cobranza_id(self.id_cobranza)
+        self.cobranza_view = CobranzaAnuladaViewWindow(
+            self.data_cobranza, self.main_window
+        )
+        self.cobranza_view.show()
 
 
 class AlumnoUpdateWindow(QtWidgets.QWidget):
@@ -317,12 +487,16 @@ class AlumnoUpdateWindow(QtWidgets.QWidget):
         self.data_alumno_update["division"] = self.ui.comboBoxDivision.currentText()
         self.data_alumno_update["turno"] = self.ui.comboBoxTurno.currentText()
         self.msj = Alumno.update_alumno_id(self.data_alumno_update)
-        self.msj = f"<div style='color:#008F39'><strong>{self.msj}.</strong></div>"
 
-        self.msj_label.setText(self.msj)
-        self.deleteLater()
-        QtTest.QTest.qWait(800)
-        self.main_window.onClickedConsultaAlumno()
+        if self.msj:
+            self.msj = f"<div style='color:#008F39'><strong>{self.msj}</strong></div>"
+            self.msj_label.setText(self.msj)
+            self.deleteLater()
+            QtTest.QTest.qWait(800)
+            self.main_window.onClickedConsultaAlumno()
+        else:
+            self.msj = f"<div style='color:#FF0000'><strong>Error al actualizar alumno.</strong></div>"
+            self.ui.labelMsjAlumno.setText(self.msj)
 
     def clickedExitFormAlumno(self):
         self.deleteLater()
@@ -363,12 +537,109 @@ class SocioUpdateWindow(QtWidgets.QWidget):
         self.data_socio_update["domicilio"] = self.ui.lineEditDomicilioSocio.text()
 
         self.msj = Socio.update_socio_id(self.data_socio_update)
-        self.msj = f"<div style='color:#008F39'><strong>{self.msj}.</strong></div>"
-
-        self.msj_label.setText(self.msj)
-        self.deleteLater()
-        QtTest.QTest.qWait(800)
-        self.main_window.onClickedConsultaSocio()
+        if self.msj:
+            self.msj = f"<div style='color:#008F39'><strong>{self.msj}</strong></div>"
+            self.msj_label.setText(self.msj)
+            self.deleteLater()
+            QtTest.QTest.qWait(800)
+            self.main_window.onClickedConsultaSocio()
+        else:
+            self.msj = f"<div style='color:#FF0000'><strong>Error al actualizar socio.</strong></div>"
+            self.ui.labelMsjSocio.setText(self.msj)
 
     def clickedExitFormSocio(self):
+        self.deleteLater()
+
+
+class CobranzaAnularWindow(QtWidgets.QWidget):
+    def __init__(self, id_cobranza: id, main_window: MainWindow, msj_label: str):
+        QtWidgets.QWidget.__init__(self)
+        self.data_cobranza_anular = dict()
+        self.id_cobranza = id_cobranza
+        self.main_window = main_window
+        self.msj_label = msj_label
+        self.ui = Ui_FormAnularCobranza()
+
+        self.setup()
+
+        self.main_window.set_date_today(self.ui.dateEditCobranza)
+
+    def setup(self):
+        self.ui.setupUi(self)
+
+        self.main_window.set_icon_button(
+            self.ui.anularCobranza, "../assets/icons/feather/save.svg"
+        )
+        self.main_window.set_icon_button(
+            self.ui.botonSalir, "../assets/icons/feather/x.svg"
+        )
+
+    def clickedAnularCobranza(self):
+        self.data_cobranza_anular["id"] = self.id_cobranza
+        self.data_cobranza_anular["fecha"] = self.ui.dateEditCobranza.text()
+        self.data_cobranza_anular["observacion"] = self.ui.lineEditObservacion.text()
+
+        self.msj = Cobranza.anular_cobranza(self.data_cobranza_anular)
+
+        if self.msj:
+            self.msj = f"<div style='color:#FF0000'><strong>{self.msj}</strong></div>"
+            self.ui.labelMsjCobranza.setText(self.msj)
+        else:
+            self.msj = f"<div style='color:#008F39'><strong>Cobranza anulada correctamente.</strong></div>"
+            self.msj_label.setText(self.msj)
+            QtTest.QTest.qWait(800)
+            self.main_window.onClickedConsultaCobranza()
+
+    def clickedExitFormCobranza(self):
+        self.deleteLater()
+
+
+class CobranzaAnuladaViewWindow(QtWidgets.QWidget):
+    def __init__(self, data_cobranza, main_window: MainWindow):
+        QtWidgets.QWidget.__init__(self)
+        self.data_cobranza = data_cobranza
+        self.main_window = main_window
+        self.ui = Ui_ViewCobranzaAnulada()
+
+        self.setup()
+
+    def setup(self):
+        self.ui.setupUi(self)
+
+        self.main_window.set_icon_button(
+            self.ui.botonSalir, "../assets/icons/feather/x.svg"
+        )
+
+        self.set_label_strong_cobranza_anulada()
+        self.set_data_cobranza_anulada(self.data_cobranza)
+
+    def set_data_cobranza_anulada(self, data_cobranza: list):
+        self.ui.labelNroCobranza.setText(str(data_cobranza.nroDocumento))
+        self.ui.labelAlumno.setText(
+            "{}, {}".format(data_cobranza.alumno.apellido, data_cobranza.alumno.nombre)
+        )
+        self.ui.labelFechaCobranza.setText(
+            datetime.date.strftime(data_cobranza.fechaCobranza, "%Y-%m-%d")
+        )
+        self.ui.labelFechaAnulada.setText(
+            datetime.date.strftime(data_cobranza.fechaCobranzaAnulada, "%Y-%m-%d")
+        )
+        self.ui.labelPeriodo.setText(
+            "{}/{}".format(
+                str(data_cobranza.periodo)[:4], str(data_cobranza.periodo)[4:6]
+            )
+        )
+        self.ui.labelMonto.setText("$ {}".format(str(data_cobranza.monto) + "0"))
+        self.ui.labelDescripcion.setText(data_cobranza.descripcionCobranzaAnulada)
+
+    def set_label_strong_cobranza_anulada(self):
+        self.ui.label_2.setText("<strong>{}</strong>".format("N° Cobranza"))
+        self.ui.label_7.setText("<strong>{}</strong>".format("Alumno"))
+        self.ui.label_4.setText("<strong>{}</strong>".format("Fecha Cobranza"))
+        self.ui.label_6.setText("<strong>{}</strong>".format("Fecha Anulación"))
+        self.ui.label_11.setText("<strong>{}</strong>".format("Periodo"))
+        self.ui.label_10.setText("<strong>{}</strong>".format("Monto"))
+        self.ui.label_8.setText("<strong>{}</strong>".format("Descripción"))
+
+    def clickedExitFormCobranza(self):
         self.deleteLater()
