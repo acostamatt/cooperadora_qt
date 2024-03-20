@@ -1,4 +1,4 @@
-black==22.1.0
+black==24.3.0
 click==8.0.3
 isort==5.10.1
 mongoengine==0.23.1
